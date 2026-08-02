@@ -1,1 +1,163 @@
 @import "tailwindcss";
+
+@theme {
+  /* Semantic surface/ink tokens — values flip in the html.light override below */
+  --color-canvas: #0b0d12;
+  --color-surface: #14171f;
+  --color-surface-2: #1b1f29;
+  --color-line: #262b36;
+  --color-ink: #f3f5f8;
+  --color-ink-muted: #8b93a6;
+
+  /* Per media-type signature accents — constant across themes */
+  --color-photos: #5b8cff;
+  --color-videos: #ff6b81;
+  --color-gif: #b98cff;
+  --color-saved: #ffc65b;
+
+  --font-display: "Sora", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --animate-scale-in: scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-slide-up: slide-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-in: fade-in 0.4s ease both;
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -400px 0;
+    }
+    100% {
+      background-position: 400px 0;
+    }
+  }
+}
+
+/* Light theme override — toggled on <html> by ThemeContext */
+html.light {
+  --color-canvas: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-surface-2: #eef0f3;
+  --color-line: #e2e5ea;
+  --color-ink: #14171f;
+  --color-ink-muted: #667085;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-surface-2);
+  border-radius: 999px;
+  border: 2px solid var(--color-canvas);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-ink-muted);
+}
+
+::selection {
+  background-color: var(--color-photos);
+  color: white;
+}
+
+/* :focus-visible {
+  outline: 2px solid var(--color-photos);
+  outline-offset: 2px;
+  border-radius: 4px;
+} */
+
+.skeleton {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-surface-2) 0%,
+    var(--color-surface) 50%,
+    var(--color-surface-2) 100%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/*
+ * Results grid layout — CSS multi-column masonry, 1/2/3/4 columns depending
+ * on viewport width. Used for every state that displays cards (loading
+ * skeleton, saved items, infinite-scroll results). Cards flow into the
+ * shortest column (break-inside-avoid on each card, see ResultCard.jsx) and
+ * are free to take on their media's natural aspect ratio instead of a fixed
+ * height.
+ */
+.results-grid {
+  column-count: 1;
+  column-gap: 1rem;
+}
+@media (min-width: 640px) {
+  .results-grid {
+    column-count: 3;
+  }
+}
+@media (min-width: 1024px) {
+  .results-grid {
+    column-count: 4;
+  }
+}
+@media (min-width: 1400px) {
+  .results-grid {
+    column-count: 5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

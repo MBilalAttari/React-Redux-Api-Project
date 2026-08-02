@@ -1,14 +1,22 @@
-import React from "react";
-import SearchBar from "./components/SearchBar";
+import React, { lazy, Suspense } from "react";
+import Header from "./components/Header";
 import Tabs from "./components/Tabs";
-import ResultGrid from "./components/ResultGrid";
+import ScrollToTop from "./components/ScrollToTop";
+import Loader from "./components/Loader";
+
+// Code-split the results grid (and its infinite-scroll/preview-modal weight)
+// out of the initial bundle, same as the original app did.
+const ResultGrid = lazy(() => import("./components/ResultGrid"));
 
 const App = () => {
   return (
-    <div className="bg-black min-h-screen text-white">
-      <SearchBar />
+    <div className="min-h-screen w-screen bg-canvas text-ink">
+      <Header />
       <Tabs />
-      <ResultGrid />
+      <Suspense fallback={<Loader />}>
+        <ResultGrid />
+      </Suspense>
+      <ScrollToTop />
     </div>
   );
 };
